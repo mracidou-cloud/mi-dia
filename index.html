@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mi Día</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EFE7DF; --bg2:#F6F0EA;
+  --card:#F9F5F1; --card2:#F1EAE3;
+  --ink:#3D3530; --ink2:#7C716A; --ink3:#A99D95;
+  --peach:#E6AE9E; --peach2:#F3CFC3; --peachD:#C98471;
+  --mint:#B9DDD2; --mintD:#6FAE9C;
+  --sand:#E8D6BF; --sandD:#C9A97F;
+  --lav:#D8D2EC;
+  --up:#5FA58F; --down:#D07C69;
+  --r:28px;
+  --sh: 14px 14px 32px rgba(166,140,120,.28), -10px -10px 26px rgba(255,255,255,.85);
+  --shIn: inset 5px 5px 12px rgba(166,140,120,.25), inset -5px -5px 12px rgba(255,255,255,.9);
+  --shBtn: 6px 6px 14px rgba(166,140,120,.30), -5px -5px 12px rgba(255,255,255,.9);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%}
+body{
+  font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:var(--ink);
+  background:radial-gradient(1200px 700px at 85% -10%,#F7EDE6 0%,transparent 60%),
+             radial-gradient(900px 600px at -10% 110%,#E9DDD2 0%,transparent 60%),var(--bg);
+  overflow-x:hidden;
+}
+/* decorative 3D spheres + arches */
+.deco{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.sphere{position:absolute;border-radius:50%;filter:drop-shadow(10px 16px 18px rgba(150,120,100,.25))}
+.s-peach{background:radial-gradient(circle at 32% 28%,#FCE3DA 0%,#EBB3A2 45%,#C98471 100%)}
+.s-mint{background:radial-gradient(circle at 32% 28%,#E9F6F1 0%,#BFE0D6 45%,#82B9A8 100%)}
+.s-sand{background:radial-gradient(circle at 32% 28%,#FBF0E1 0%,#ECD6B8 45%,#C9A57A 100%)}
+.arch{position:absolute;background:linear-gradient(180deg,#EDC0B1,#E3A898);border-radius:200px 200px 0 0;opacity:.55}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.sphere{animation:float 9s ease-in-out infinite}
+.sphere:nth-child(2n){animation-duration:11s;animation-delay:-3s}
+.sphere:nth-child(3n){animation-duration:13s;animation-delay:-6s}
+
+.wrap{position:relative;z-index:1;max-width:1320px;margin:0 auto;padding:28px 24px 48px}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+.hello h1{font-size:30px;font-weight:800;letter-spacing:-.02em}
+.hello p{color:var(--ink2);margin-top:4px;font-weight:500}
+.hello p::first-letter,.ag-date::first-letter,.month::first-letter{text-transform:uppercase}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;background:var(--card);box-shadow:var(--shBtn);font-size:13px;font-weight:600;color:var(--ink2)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--mintD)}
+
+.grid{display:grid;gap:22px;grid-template-columns:repeat(12,1fr)}
+.card{
+  background:linear-gradient(145deg,#FCF9F6,var(--card2));
+  border-radius:var(--r);box-shadow:var(--sh);padding:22px;position:relative;overflow:hidden;
+  border:1px solid rgba(255,255,255,.7);
+}
+.card h2{font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.card h2 small{font-size:11px;font-weight:600;color:var(--ink3)}
+.c-clock{grid-column:span 4}
+.c-weather{grid-column:span 5}
+.c-stock{grid-column:span 3}
+.c-cal{grid-column:span 4}
+.c-agenda{grid-column:span 4}
+.c-news{grid-column:span 4}
+@media(max-width:1100px){
+  .c-clock,.c-weather,.c-stock,.c-cal,.c-agenda,.c-news{grid-column:span 6}
+}
+@media(max-width:700px){
+  .c-clock,.c-weather,.c-stock,.c-cal,.c-agenda,.c-news{grid-column:span 12}
+  .hello h1{font-size:24px}
+}
+
+/* ---------- Clock ---------- */
+.clock-wrap{display:flex;flex-direction:column;align-items:center;gap:14px}
+.dial{width:210px;height:210px;border-radius:50%;position:relative;
+  background:radial-gradient(circle at 35% 30%,#FFFFFF 0%,#F4ECE5 55%,#E7DCD2 100%);
+  box-shadow:16px 16px 34px rgba(166,140,120,.35),-12px -12px 28px rgba(255,255,255,.95),inset 0 0 0 10px #F7F1EB}
+.dial .face{position:absolute;inset:22px;border-radius:50%;box-shadow:var(--shIn);background:#F6EFE8}
+.tick{position:absolute;left:50%;top:50%;width:3px;height:9px;background:var(--ink3);border-radius:2px;transform-origin:50% 50%}
+.tick.big{height:13px;width:4px;background:var(--peachD)}
+.hand{position:absolute;left:50%;bottom:50%;transform-origin:50% 100%;border-radius:6px}
+.h-hour{width:7px;height:48px;margin-left:-3.5px;background:var(--ink)}
+.h-min{width:5px;height:68px;margin-left:-2.5px;background:var(--ink2)}
+.h-sec{width:2px;height:74px;margin-left:-1px;background:var(--peachD)}
+.pin{position:absolute;left:50%;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#FCE3DA,#E6AE9E 50%,#C98471);box-shadow:2px 3px 6px rgba(150,110,90,.4)}
+.digital{font-size:38px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.digital span{font-size:16px;color:var(--ink3);font-weight:700;margin-left:4px}
+.tz{font-size:12px;color:var(--ink2);font-weight:600}
+
+/* ---------- Weather ---------- */
+.wx-top{display:flex;align-items:center;gap:18px}
+.wx-icon{width:96px;height:96px;position:relative;flex:none}
+.sun{position:absolute;width:62px;height:62px;border-radius:50%;left:6px;top:6px;
+  background:radial-gradient(circle at 35% 30%,#FFF4DC,#F7D79A 50%,#E8B061);
+  box-shadow:0 0 0 8px rgba(247,215,154,.25),6px 10px 18px rgba(200,150,80,.35)}
+.moon{position:absolute;width:58px;height:58px;border-radius:50%;left:8px;top:8px;
+  background:radial-gradient(circle at 35% 30%,#FFFFFF,#E5E0F2 55%,#B9B1D6);box-shadow:6px 10px 18px rgba(130,120,170,.35)}
+.cloud{position:absolute;left:26px;top:44px;width:66px;height:32px;border-radius:20px;
+  background:linear-gradient(180deg,#FFFFFF,#ECE6E1);box-shadow:6px 8px 14px rgba(150,130,115,.3)}
+.cloud::before{content:"";position:absolute;width:34px;height:34px;border-radius:50%;left:10px;top:-16px;background:linear-gradient(180deg,#FFFFFF,#F2ECE7)}
+.cloud::after{content:"";position:absolute;width:26px;height:26px;border-radius:50%;left:32px;top:-10px;background:linear-gradient(180deg,#FFFFFF,#F2ECE7)}
+.drops{position:absolute;left:38px;top:78px;display:flex;gap:9px}
+.drops i{width:5px;height:11px;border-radius:5px;background:#9CC9E0}
+.wx-temp{font-size:56px;font-weight:800;letter-spacing:-.04em;line-height:1}
+.wx-temp sup{font-size:20px;color:var(--ink2);font-weight:700;vertical-align:top;margin-left:2px}
+.wx-meta{color:var(--ink2);font-size:13px;font-weight:600;margin-top:6px}
+.wx-loc{font-size:13px;font-weight:700}
+.unit-tg{display:flex;background:var(--card2);border-radius:999px;box-shadow:var(--shIn);padding:3px}
+.unit-tg button{border:0;background:transparent;font:inherit;font-size:11px;font-weight:700;color:var(--ink3);padding:5px 10px;border-radius:999px;cursor:pointer}
+.unit-tg button.on{background:var(--card);color:var(--ink);box-shadow:3px 3px 6px rgba(166,140,120,.25)}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:20px}
+.day{text-align:center;padding:10px 4px;border-radius:18px;background:var(--card);box-shadow:var(--shBtn);font-size:12px}
+.day b{display:block;font-weight:700;color:var(--ink2);text-transform:capitalize}
+.day .mini{width:22px;height:22px;margin:7px auto;border-radius:50%}
+.day .hi{font-weight:800;font-size:13px}
+.day .lo{color:var(--ink3);font-weight:600}
+.day .rain{margin-top:5px;font-size:10px;font-weight:700;color:#6E9FB8}
+.day.today{background:linear-gradient(160deg,#F7DDD3,#EDBCAD)}
+
+/* ---------- Stocks ---------- */
+.tick-row{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:18px;background:var(--card);box-shadow:var(--shBtn);margin-bottom:12px}
+.tick-row:last-of-type{margin-bottom:0}
+.tick-name{font-size:12px;font-weight:700;color:var(--ink2)}
+.tick-val{font-size:18px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.chg{font-size:12px;font-weight:700;padding:5px 9px;border-radius:999px;text-align:right;white-space:nowrap}
+.chg.up{color:var(--up);background:rgba(185,221,210,.55)}
+.chg.down{color:var(--down);background:rgba(243,207,195,.6)}
+.chg small{display:block;font-size:10px;font-weight:600;opacity:.8}
+.note{font-size:11px;color:var(--ink3);margin-top:12px;font-weight:500;line-height:1.4}
+
+/* ---------- Calendar ---------- */
+.cal-nav{display:flex;gap:8px}
+.icon-btn{width:32px;height:32px;border-radius:50%;border:0;background:var(--card);box-shadow:var(--shBtn);cursor:pointer;color:var(--ink2);font-size:14px;font-weight:800}
+.icon-btn:active{box-shadow:var(--shIn)}
+.month{font-size:18px;font-weight:800;margin-bottom:12px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center}
+.cal .dow{font-size:11px;font-weight:700;color:var(--ink3);padding-bottom:4px}
+.cal button{aspect-ratio:1;border:0;border-radius:14px;background:transparent;font:inherit;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer;position:relative}
+.cal button:hover{background:var(--card);box-shadow:var(--shBtn)}
+.cal button.muted{color:var(--ink3);opacity:.5}
+.cal button.today{background:var(--card);box-shadow:var(--shBtn);color:var(--peachD);font-weight:800}
+.cal button.sel{background:linear-gradient(160deg,#F2C9BC,#E3A593);color:#fff;box-shadow:6px 6px 14px rgba(201,132,113,.4),-4px -4px 10px rgba(255,255,255,.8)}
+.cal button .ev{position:absolute;bottom:5px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:var(--mintD)}
+.cal button.sel .ev{background:#fff}
+
+/* ---------- Agenda ---------- */
+.ag-date{font-size:13px;font-weight:600;color:var(--ink2);margin-bottom:12px}
+.ag-list{display:flex;flex-direction:column;gap:10px;max-height:260px;overflow:auto;padding:4px 6px 8px 2px;margin:-4px -6px 0 -2px}
+.ev-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:18px;background:var(--card);box-shadow:var(--shBtn)}
+.ev-bar{width:6px;align-self:stretch;border-radius:6px}
+.ev-time{font-size:12px;font-weight:800;color:var(--ink2);min-width:44px;font-variant-numeric:tabular-nums}
+.ev-title{flex:1;font-size:14px;font-weight:600;word-break:break-word}
+.ev-del{border:0;background:transparent;color:var(--ink3);cursor:pointer;font-size:16px;padding:2px 6px;border-radius:8px}
+.ev-del:hover{color:var(--down);background:rgba(243,207,195,.5)}
+.empty{font-size:13px;color:var(--ink3);text-align:center;padding:22px 8px;border-radius:18px;box-shadow:var(--shIn)}
+form.add{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.row{display:flex;gap:10px}
+.inp{border:0;outline:0;font:inherit;font-size:13px;font-weight:600;color:var(--ink);background:var(--card2);border-radius:14px;padding:11px 13px;box-shadow:var(--shIn);width:100%}
+.inp::placeholder{color:var(--ink3)}
+.inp.time{width:118px;flex:none}
+.colors{display:flex;gap:8px;align-items:center}
+.sw{width:24px;height:24px;border-radius:50%;border:0;cursor:pointer;box-shadow:3px 3px 6px rgba(166,140,120,.35),-2px -2px 5px #fff}
+.sw.on{outline:3px solid #fff;outline-offset:-1px;transform:scale(1.12)}
+.btn{border:0;font:inherit;font-size:13px;font-weight:700;color:#fff;cursor:pointer;padding:11px 18px;border-radius:14px;
+  background:linear-gradient(160deg,#EDBCAD,#D8917E);box-shadow:6px 6px 14px rgba(201,132,113,.35),-4px -4px 10px rgba(255,255,255,.85);margin-left:auto}
+.btn:active{transform:translateY(1px)}
+.sync{font-size:11px;color:var(--ink3);margin-top:10px;font-weight:500}
+
+/* ---------- News ---------- */
+.news-list{display:flex;flex-direction:column;gap:12px}
+.news{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:18px;background:var(--card);box-shadow:var(--shBtn);text-decoration:none;color:inherit;transition:transform .15s}
+.news:hover{transform:translateY(-2px)}
+.news .tag{flex:none;width:34px;height:34px;border-radius:12px;display:grid;place-items:center;font-size:15px}
+.news .t{font-size:13px;font-weight:600;line-height:1.35}
+.news .s{font-size:11px;color:var(--ink3);font-weight:600;margin-top:4px}
+
+.foot{margin-top:28px;text-align:center;font-size:11px;color:var(--ink3);font-weight:500}
+</style>
+</head>
+<body>
+<div class="deco" aria-hidden="true">
+  <div class="arch" style="width:260px;height:520px;right:-60px;top:120px"></div>
+  <div class="arch" style="width:180px;height:360px;left:-40px;bottom:-60px;opacity:.35"></div>
+  <div class="sphere s-peach" style="width:90px;height:90px;left:3%;top:16%"></div>
+  <div class="sphere s-mint" style="width:56px;height:56px;right:7%;top:6%"></div>
+  <div class="sphere s-sand" style="width:120px;height:120px;right:2%;bottom:8%"></div>
+  <div class="sphere s-mint" style="width:40px;height:40px;left:46%;bottom:4%"></div>
+  <div class="sphere s-peach" style="width:30px;height:30px;left:28%;top:3%"></div>
+  <div class="sphere s-sand" style="width:64px;height:64px;left:1%;bottom:22%"></div>
+</div>
+
+<div class="wrap">
+  <header>
+    <div class="hello">
+      <h1 id="greet">Hola 👋</h1>
+      <p id="today-long"></p>
+    </div>
+    <div class="pill"><span class="dot"></span><span id="updated">Datos al día</span></div>
+  </header>
+
+  <div class="grid">
+    <!-- Clock -->
+    <section class="card c-clock">
+      <h2>Reloj <small id="tzname"></small></h2>
+      <div class="clock-wrap">
+        <div class="dial" id="dial">
+          <div class="face"></div>
+          <div class="hand h-hour" id="hh"></div>
+          <div class="hand h-min" id="hm"></div>
+          <div class="hand h-sec" id="hs"></div>
+          <div class="pin"></div>
+        </div>
+        <div class="digital" id="digital">--:--<span></span></div>
+        <div class="tz" id="datesmall"></div>
+      </div>
+    </section>
+
+    <!-- Weather -->
+    <section class="card c-weather">
+      <h2>El tiempo
+        <div class="unit-tg"><button data-u="F" class="on">°F</button><button data-u="C">°C</button></div>
+      </h2>
+      <div class="wx-top">
+        <div class="wx-icon" id="wxicon"></div>
+        <div>
+          <div class="wx-loc" id="wxloc"></div>
+          <div class="wx-temp" id="wxtemp">--<sup>°</sup></div>
+          <div class="wx-meta" id="wxmeta"></div>
+        </div>
+      </div>
+      <div class="days" id="days"></div>
+    </section>
+
+    <!-- Stocks -->
+    <section class="card c-stock">
+      <h2>Bolsa <small id="stockdate"></small></h2>
+      <div id="stocks"></div>
+      <div class="note" id="stocknote"></div>
+    </section>
+
+    <!-- Calendar -->
+    <section class="card c-cal">
+      <h2>Calendario
+        <div class="cal-nav">
+          <button class="icon-btn" id="prev" aria-label="Mes anterior">‹</button>
+          <button class="icon-btn" id="next" aria-label="Mes siguiente">›</button>
+        </div>
+      </h2>
+      <div class="month" id="monthname"></div>
+      <div class="cal" id="cal"></div>
+    </section>
+
+    <!-- Agenda -->
+    <section class="card c-agenda">
+      <h2>Mi agenda <small id="agcount"></small></h2>
+      <div class="ag-date" id="agdate"></div>
+      <div class="ag-list" id="aglist"></div>
+      <form class="add" id="addform" autocomplete="off">
+        <input class="inp" id="evtitle" placeholder="Nuevo evento… (ej. Dentista)" maxlength="80" required>
+        <div class="row">
+          <input class="inp time" id="evtime" type="time">
+          <div class="colors" id="colors"></div>
+          <button class="btn" type="submit">Añadir</button>
+        </div>
+      </form>
+      <div class="sync" id="sync">Conectando…</div>
+    </section>
+
+    <!-- News -->
+    <section class="card c-news">
+      <h2>Noticias <small id="newsdate"></small></h2>
+      <div class="news-list" id="news"></div>
+    </section>
+  </div>
+  <div class="foot" id="foot"></div>
+</div>
+
+<script>
+/* ===== Snapshot embebido (se reemplaza si hay datos más recientes en la base de datos) ===== */
+const SNAPSHOT = {
+  updatedAt: "2026-11-08T17:15:00-05:00",
+  weather: {
+    location: "Babylon, NY", unit: "F",
+    current: { temp: 56, condition: "clear", text: "Despejado", isDay: false },
+    days: [
+      {date:"2026-11-08",hi:61,lo:49,rain:5,cond:"clear"},
+      {date:"2026-11-09",hi:58,lo:45,rain:15,cond:"partly"},
+      {date:"2026-11-10",hi:60,lo:46,rain:10,cond:"clear"},
+      {date:"2026-11-11",hi:61,lo:47,rain:10,cond:"clear"},
+      {date:"2026-11-12",hi:59,lo:45,rain:75,cond:"rain"},
+      {date:"2026-11-13",hi:47,lo:39,rain:35,cond:"cloudy"},
+      {date:"2026-11-14",hi:47,lo:39,rain:15,cond:"partly"}
+    ]
+  },
+  stocks: {
+    asOf: "Cierre del viernes 6 nov",
+    items: [
+      {name:"S&P 500", value:7376.86, chg:0.31, week:-2.7},
+      {name:"Dow Jones", value:51285.73, chg:-0.46, week:-0.9},
+      {name:"Nasdaq", value:24579.42, chg:1.09, week:-3.4},
+      {name:"Russell 2000", value:2754.11, chg:0.89, week:-2.1}
+    ],
+    note: "Las tecnológicas y de IA rebotaron el viernes, pero los índices cerraron la semana en negativo. Fuente: AP."
+  },
+  news: {
+    asOf: "7–8 nov",
+    items: [
+      {icon:"🏛️", color:"#F3CFC3", title:"Stephen Miller reemplaza a Susie Wiles como jefe de gabinete de la Casa Blanca", source:"AP", url:"https://www.yahoo.com/news/videos/ap-top-stories-november-7-220103416.html"},
+      {icon:"📈", color:"#B9DDD2", title:"Las acciones de IA rebotan el viernes y recortan parte de la caída de la semana", source:"AP / Washington Post", url:"https://wtop.com/national/2026/11/how-major-us-stock-indexes-fared-friday-11-6-2026"},
+      {icon:"🇵🇱", color:"#E8D6BF", title:"Tiroteo en la plaza del mercado de Cracovia, Polonia: 6 muertos y 16 heridos", source:"PBS NewsHour", url:"https://www.pbs.org/newshour/latest"},
+      {icon:"🌏", color:"#D8D2EC", title:"Sismo de magnitud 5.5 sacude el centro de Japón; al menos 22 heridos", source:"AP / Times of Israel", url:"https://timesofisrael.com/liveblog-november-07-2026"},
+      {icon:"⛪", color:"#F3CFC3", title:"El papa León XIV inicia en Uruguay su gira por tres países de Latinoamérica", source:"AP", url:"https://www.yahoo.com/news/videos/ap-top-stories-november-7-220103416.html"}
+    ]
+  }
+};
+
+/* ===== Utilidades ===== */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad = n => String(n).padStart(2,"0");
+const ymd = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const parseYmd = s => { const [y,m,d] = s.split("-").map(Number); return new Date(y, m-1, d); };
+const fmtNum = n => n.toLocaleString("es-MX",{minimumFractionDigits:2,maximumFractionDigits:2});
+const sget = k => { try { return localStorage.getItem(k); } catch(e){ return null; } };
+const sset = (k,v) => { try { localStorage.setItem(k,v); } catch(e){} };
+
+let feed = SNAPSHOT;
+
+/* ===== Saludo y fecha ===== */
+function renderHeader(){
+  const now = new Date(), h = now.getHours();
+  $("#greet").textContent = (h < 12 ? "Buenos días" : h < 19 ? "Buenas tardes" : "Buenas noches") + " ✨";
+  $("#today-long").textContent = now.toLocaleDateString("es-ES",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  const u = new Date(feed.updatedAt);
+  $("#updated").textContent = "Actualizado " + u.toLocaleDateString("es-ES",{day:"numeric",month:"short"}) + ", " + u.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"});
+}
+
+/* ===== Reloj ===== */
+(function buildDial(){
+  const dial = $("#dial");
+  for (let i=0;i<60;i++){
+    if (i%5 && i%1===0 && i%5!==0 && i%2) continue; // menos marcas, más limpio
+    const t = document.createElement("div");
+    t.className = "tick" + (i%15===0 ? " big" : "");
+    const r = 82;
+    const a = i*6*Math.PI/180;
+    t.style.transform = `translate(-50%,-50%) translate(${Math.sin(a)*r}px,${-Math.cos(a)*r}px) rotate(${i*6}deg)`;
+    if (i%5!==0){ t.style.height="4px"; t.style.width="4px"; t.style.borderRadius="50%"; t.style.opacity=".5"; }
+    dial.insertBefore(t, dial.children[1]);
+  }
+  $("#tzname").textContent = Intl.DateTimeFormat().resolvedOptions().timeZone.replace("_"," ");
+})();
+function tick(){
+  const d = new Date();
+  const s = d.getSeconds() + d.getMilliseconds()/1000, m = d.getMinutes() + s/60, h = (d.getHours()%12) + m/60;
+  $("#hs").style.transform = `rotate(${s*6}deg)`;
+  $("#hm").style.transform = `rotate(${m*6}deg)`;
+  $("#hh").style.transform = `rotate(${h*30}deg)`;
+  const hh = d.getHours(), ampm = hh>=12 ? "PM" : "AM", h12 = hh%12 || 12;
+  $("#digital").innerHTML = `${h12}:${pad(d.getMinutes())}<span>${pad(d.getSeconds())} ${ampm}</span>`;
+  $("#datesmall").textContent = d.toLocaleDateString("es-ES",{weekday:"long",day:"numeric",month:"long"});
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+
+/* ===== Tiempo ===== */
+let unit = sget("midia-unit") || "F";
+const toU = f => unit==="F" ? Math.round(f) : Math.round((f-32)*5/9);
+const condText = {clear:"Despejado",partly:"Parcialmente nublado",cloudy:"Nublado",rain:"Lluvia",snow:"Nieve",storm:"Tormenta"};
+const miniBg = {
+  clear:"radial-gradient(circle at 35% 30%,#FFF4DC,#F7D79A 50%,#E8B061)",
+  partly:"radial-gradient(circle at 35% 30%,#FFF4DC,#F1DDB6 50%,#D9C3A0)",
+  cloudy:"radial-gradient(circle at 35% 30%,#FFFFFF,#E9E3DE 55%,#C9BFB7)",
+  rain:"radial-gradient(circle at 35% 30%,#F0F8FC,#BFDDEB 55%,#86B7CF)",
+  snow:"radial-gradient(circle at 35% 30%,#FFFFFF,#EEF2F8 55%,#C7D0DE)",
+  storm:"radial-gradient(circle at 35% 30%,#ECE8F4,#C9C1DE 55%,#9087B3)"
+};
+function bigIcon(cond, isDay){
+  const orb = isDay ? '<div class="sun"></div>' : '<div class="moon"></div>';
+  if (cond==="clear") return orb;
+  if (cond==="partly") return orb + '<div class="cloud"></div>';
+  if (cond==="rain"||cond==="storm") return '<div class="cloud" style="left:14px;top:30px"></div><div class="drops" style="left:28px;top:66px"><i></i><i></i><i></i></div>';
+  return '<div class="cloud" style="left:14px;top:34px"></div>';
+}
+function renderWeather(){
+  const w = feed.weather;
+  $("#wxloc").textContent = "📍 " + w.location;
+  $("#wxtemp").innerHTML = `${toU(w.current.temp)}<sup>°${unit}</sup>`;
+  const t = w.days[0];
+  $("#wxmeta").textContent = `${w.current.text || condText[w.current.condition] || ""} · Máx ${toU(t.hi)}° · Mín ${toU(t.lo)}° · Lluvia ${t.rain}%`;
+  $("#wxicon").innerHTML = bigIcon(w.current.condition, w.current.isDay);
+  const todayStr = ymd(new Date());
+  $("#days").innerHTML = w.days.slice(0,7).map(d => {
+    const dd = parseYmd(d.date);
+    const label = d.date===todayStr ? "Hoy" : dd.toLocaleDateString("es-ES",{weekday:"short"}).replace(".","");
+    return `<div class="day ${d.date===todayStr?"today":""}"><b>${esc(label)}</b>
+      <div class="mini" style="background:${miniBg[d.cond]||miniBg.cloudy}"></div>
+      <div class="hi">${toU(d.hi)}°</div><div class="lo">${toU(d.lo)}°</div>
+      <div class="rain">💧${d.rain}%</div></div>`;
+  }).join("");
+  document.querySelectorAll(".unit-tg button").forEach(b => b.classList.toggle("on", b.dataset.u===unit));
+}
+document.querySelectorAll(".unit-tg button").forEach(b => b.onclick = () => { unit = b.dataset.u; sset("midia-unit",unit); renderWeather(); });
+
+/* ===== Bolsa ===== */
+function renderStocks(){
+  const s = feed.stocks;
+  $("#stockdate").textContent = s.asOf;
+  $("#stocks").innerHTML = s.items.map(it => {
+    const up = it.chg >= 0, wup = it.week >= 0;
+    return `<div class="tick-row"><div><div class="tick-name">${esc(it.name)}</div><div class="tick-val">${fmtNum(it.value)}</div></div>
+      <div class="chg ${up?"up":"down"}">${up?"▲":"▼"} ${Math.abs(it.chg).toFixed(2)}%<small>Semana ${wup?"+":""}${it.week.toFixed(1)}%</small></div></div>`;
+  }).join("");
+  $("#stocknote").textContent = s.note || "";
+}
+
+/* ===== Noticias ===== */
+function renderNews(){
+  const n = feed.news;
+  $("#newsdate").textContent = n.asOf;
+  $("#news").innerHTML = n.items.map(it => {
+    const href = /^https:\/\//.test(it.url||"") ? it.url : "#";
+    return `<a class="news" href="${esc(href)}" target="_blank" rel="noopener">
+      <div class="tag" style="background:${esc(it.color||"#F3CFC3")}">${esc(it.icon||"📰")}</div>
+      <div><div class="t">${esc(it.title)}</div><div class="s">${esc(it.source)}</div></div></a>`;
+  }).join("");
+}
+
+/* ===== Calendario + Agenda ===== */
+const COLORS = ["#E6AE9E","#9FCFBF","#E2C599","#BDB3DE","#9CC9E0"];
+let evColor = COLORS[0];
+let events = [];           // {id,date,time,title,color}
+let viewMonth = new Date(); viewMonth.setDate(1);
+let selDate = ymd(new Date());
+let store = null;          // {add, remove}
+
+$("#colors").innerHTML = COLORS.map((c,i)=>`<button type="button" class="sw ${i===0?"on":""}" data-c="${c}" style="background:${c}" aria-label="Color ${i+1}"></button>`).join("");
+$("#colors").onclick = e => { const b = e.target.closest(".sw"); if(!b) return; evColor = b.dataset.c;
+  document.querySelectorAll(".sw").forEach(x=>x.classList.toggle("on", x===b)); };
+
+function renderCal(){
+  $("#monthname").textContent = viewMonth.toLocaleDateString("es-ES",{month:"long",year:"numeric"});
+  const first = new Date(viewMonth), startDow = (first.getDay()+6)%7; // lunes primero
+  const start = new Date(first); start.setDate(1-startDow);
+  const todayStr = ymd(new Date());
+  const withEv = new Set(events.map(e=>e.date));
+  let html = ["L","M","X","J","V","S","D"].map(d=>`<div class="dow">${d}</div>`).join("");
+  for (let i=0;i<42;i++){
+    const d = new Date(start); d.setDate(start.getDate()+i);
+    const k = ymd(d);
+    const cls = [d.getMonth()!==viewMonth.getMonth()?"muted":"", k===todayStr?"today":"", k===selDate?"sel":""].join(" ");
+    html += `<button class="${cls}" data-d="${k}">${d.getDate()}${withEv.has(k)?'<span class="ev"></span>':""}</button>`;
+  }
+  $("#cal").innerHTML = html;
+}
+$("#cal").onclick = e => { const b = e.target.closest("button[data-d]"); if(!b) return;
+  selDate = b.dataset.d; const d = parseYmd(selDate);
+  if (d.getMonth()!==viewMonth.getMonth()) { viewMonth = new Date(d.getFullYear(), d.getMonth(), 1); }
+  renderCal(); renderAgenda(); };
+$("#prev").onclick = () => { viewMonth.setMonth(viewMonth.getMonth()-1); renderCal(); };
+$("#next").onclick = () => { viewMonth.setMonth(viewMonth.getMonth()+1); renderCal(); };
+
+function renderAgenda(){
+  const d = parseYmd(selDate);
+  const isToday = selDate===ymd(new Date());
+  $("#agdate").textContent = (isToday ? "Hoy · " : "") + d.toLocaleDateString("es-ES",{weekday:"long",day:"numeric",month:"long"});
+  const list = events.filter(e=>e.date===selDate).sort((a,b)=>(a.time||"99").localeCompare(b.time||"99"));
+  $("#agcount").textContent = list.length ? `${list.length} evento${list.length>1?"s":""}` : "";
+  $("#aglist").innerHTML = list.length ? list.map(e=>`
+    <div class="ev-item"><div class="ev-bar" style="background:${esc(e.color)}"></div>
+      <div class="ev-time">${e.time ? esc(fmtTime(e.time)) : "Todo el día"}</div>
+      <div class="ev-title">${esc(e.title)}</div>
+      <button class="ev-del" data-id="${esc(e.id)}" title="Borrar">✕</button></div>`).join("")
+    : `<div class="empty">Nada programado este día 🌿<br>Añade algo abajo.</div>`;
+}
+function fmtTime(t){ const [h,m]=t.split(":").map(Number); return `${h%12||12}:${pad(m)} ${h>=12?"PM":"AM"}`; }
+
+$("#aglist").onclick = async e => { const b = e.target.closest(".ev-del"); if(!b || !store) return;
+  b.disabled = true; try { await store.remove(b.dataset.id); } catch(err){ b.disabled=false; setSync("No se pudo borrar. Inténtalo de nuevo."); } };
+
+$("#addform").onsubmit = async e => {
+  e.preventDefault();
+  const title = $("#evtitle").value.trim(); if(!title || !store) return;
+  const ev = { date: selDate, time: $("#evtime").value || "", title, color: evColor, createdAt: Date.now() };
+  $("#evtitle").value = ""; $("#evtime").value = "";
+  try { await store.add(ev); } catch(err){ setSync(err && err.code==="quota_exceeded" ? "Agenda llena: borra eventos antiguos." : "No se pudo guardar. Inténtalo de nuevo."); }
+};
+function setSync(t){ $("#sync").textContent = t; }
+
+/* Almacenamiento local (respaldo si no hay base de datos) */
+function localStore(){
+  const load = () => { try { return JSON.parse(sget("midia-events")||"[]"); } catch(e){ return []; } };
+  events = load(); renderCal(); renderAgenda();
+  setSync("Guardado solo en este navegador.");
+  return {
+    add: async ev => { ev.id = "l"+Date.now().toString(36); events.push(ev); sset("midia-events", JSON.stringify(events)); renderCal(); renderAgenda(); },
+    remove: async id => { events = events.filter(e=>e.id!==id); sset("midia-events", JSON.stringify(events)); renderCal(); renderAgenda(); }
+  };
+}
+
+/* ===== Render inicial ===== */
+function renderFeed(){ renderHeader(); renderWeather(); renderStocks(); renderNews();
+  $("#foot").textContent = "Tiempo: pronóstico local · Bolsa y noticias: AP y otras fuentes enlazadas · Los datos se actualizan cuando Claude los renueva."; }
+renderFeed(); renderCal(); renderAgenda();
+setInterval(renderHeader, 60000);
+
+/* ===== Conexión a la base de datos ===== */
+(async () => {
+  let db = null, user = null, uid = null;
+  try { db = await claude.use("db"); } catch(e) {}
+  try { user = await claude.use("user"); uid = user ? await user.id() : null; } catch(e) {}
+
+  // Feed compartido (tiempo, bolsa, noticias) escrito por Claude
+  if (db) {
+    try {
+      db.doc("feed/today").onSnapshot(snap => {
+        if (!snap.exists) return;
+        const d = snap.data();
+        if (d && d.weather && d.stocks && d.news && new Date(d.updatedAt) >= new Date(SNAPSHOT.updatedAt)) { feed = d; renderFeed(); }
+      }, () => {});
+    } catch(e) {}
+  }
+
+  // Agenda privada por persona
+  if (!db || !uid) { store = localStore(); return; }
+  const col = db.collection("data/users/" + uid);
+  let loaded = false;
+  const timer = setTimeout(() => { if(!loaded) setSync("La agenda no responde todavía; puede estar desactualizada."); }, 10000);
+  col.onSnapshot(snap => {
+    events = snap.docs.map(s => ({ id: s.id, ...s.data() })).filter(e => e.date && e.title);
+    renderCal(); renderAgenda();
+    if (!snap.metadata.fromCache) { loaded = true; clearTimeout(timer); setSync("☁️ Sincronizada en todos tus dispositivos · privada"); }
+  }, err => { clearTimeout(timer); setSync("No se pudo conectar con la agenda."); });
+  store = {
+    add: async ev => { await col.add(ev); },
+    remove: async id => { await col.doc(id).delete(); }
+  };
+})();
+</script>
+</body>
+</html>
