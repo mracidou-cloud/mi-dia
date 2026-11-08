@@ -176,6 +176,32 @@ form.add{display:flex;flex-direction:column;gap:10px;margin-top:16px}
 .news .t{font-size:13px;font-weight:600;line-height:1.35}
 .news .s{font-size:11px;color:var(--ink3);font-weight:600;margin-top:4px}
 
+
+/* ---------- Cartelera ---------- */
+.c-movies{grid-column:span 12}
+.th-tabs{display:flex;gap:10px;overflow-x:auto;padding:4px 4px 12px;margin:0 -4px 6px}
+.th-tab{flex:none;border:0;font:inherit;cursor:pointer;text-align:left;padding:10px 14px;border-radius:18px;background:var(--card);box-shadow:var(--shBtn);color:var(--ink)}
+.th-tab b{display:block;font-size:13px;font-weight:700;white-space:nowrap}
+.th-tab small{font-size:11px;color:var(--ink3);font-weight:600}
+.th-tab.on{background:linear-gradient(160deg,#F2C9BC,#E3A593);color:#fff}
+.th-tab.on small{color:rgba(255,255,255,.85)}
+.mv-tools{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:6px 0 14px;flex-wrap:wrap}
+.chk{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--ink2);cursor:pointer}
+.chk input{accent-color:#D8917E;width:16px;height:16px}
+.fd-link{font-size:12px;font-weight:700;color:var(--peachD);text-decoration:none;padding:8px 14px;border-radius:999px;background:var(--card);box-shadow:var(--shBtn)}
+.mv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.mv{display:flex;gap:14px;padding:14px;border-radius:22px;background:var(--card);box-shadow:var(--shBtn)}
+.poster{flex:none;width:58px;height:80px;border-radius:14px;display:grid;place-items:center;font-size:22px;font-weight:800;color:#fff;
+  box-shadow:inset -6px -8px 14px rgba(0,0,0,.08),inset 6px 6px 12px rgba(255,255,255,.45),4px 6px 12px rgba(166,140,120,.3);text-shadow:0 2px 4px rgba(0,0,0,.15)}
+.mv-t{font-size:14px;font-weight:700;line-height:1.3}
+.rate{display:inline-block;font-size:10px;font-weight:800;color:var(--ink2);border:1.5px solid var(--ink3);border-radius:6px;padding:1px 5px;margin-top:4px}
+.times{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.tm{font-size:11px;font-weight:700;padding:5px 8px;border-radius:10px;background:var(--card2);box-shadow:var(--shIn);color:var(--ink);font-variant-numeric:tabular-nums}
+.tm.past{opacity:.35;text-decoration:line-through}
+.tm.pf{background:rgba(185,221,210,.6);box-shadow:none;color:#3F7F6C}
+.tm.d3{background:rgba(216,210,236,.8);box-shadow:none;color:#6A5F9A}
+.legend{display:flex;gap:12px;font-size:11px;font-weight:600;color:var(--ink3);align-items:center}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
 .foot{margin-top:28px;text-align:center;font-size:11px;color:var(--ink3);font-weight:500}
 </style>
 </head>
@@ -273,6 +299,18 @@ form.add{display:flex;flex-direction:column;gap:10px;margin-top:16px}
       <h2>Noticias <small id="newsdate"></small></h2>
       <div class="news-list" id="news"></div>
     </section>
+
+    <!-- Cartelera -->
+    <section class="card c-movies">
+      <h2>🎬 Cartelera de hoy <small id="mvdate"></small></h2>
+      <div class="th-tabs" id="thtabs"></div>
+      <div class="mv-tools">
+        <label class="chk"><input type="checkbox" id="onlyNext" checked> Solo funciones que aún no empiezan</label>
+        <div class="legend"><span><i style="background:#B9DDD2"></i>Premium/IMAX</span><span><i style="background:#D8D2EC"></i>3D</span></div>
+        <a class="fd-link" id="fdlink" href="https://www.fandango.com/11702_movietimes" target="_blank" rel="noopener">Comprar en Fandango ↗</a>
+      </div>
+      <div class="mv-grid" id="movies"></div>
+    </section>
   </div>
   <div class="foot" id="foot"></div>
 </div>
@@ -304,6 +342,7 @@ const SNAPSHOT = {
     ],
     note: "Las tecnológicas y de IA rebotaron el viernes, pero los índices cerraron la semana en negativo. Fuente: AP."
   },
+  movies: {"asOf": "Domingo 8 nov", "zip": "11702", "url": "https://www.fandango.com/11702_movietimes", "date": "2026-11-08", "theaters": [{"name": "South Bay Cinemas", "city": "West Babylon", "dist": "4.0 mi", "movies": [{"title": "Godzilla Minus Zero", "rating": "R", "shows": [{"t": 780, "f": ""}, {"t": 960, "f": ""}, {"t": 1140, "f": ""}, {"t": 1200, "f": ""}]}, {"title": "The Cat in the Hat", "rating": "PG", "shows": [{"t": 720, "f": ""}, {"t": 795, "f": ""}, {"t": 885, "f": ""}, {"t": 975, "f": ""}, {"t": 1050, "f": ""}, {"t": 1155, "f": ""}]}, {"title": "Wildwood", "rating": "PG-13", "shows": [{"t": 900, "f": ""}, {"t": 1185, "f": ""}]}, {"title": "The Only Living Pickpocket in New York", "rating": "R", "shows": [{"t": 780, "f": ""}, {"t": 1065, "f": ""}]}, {"title": "You Can See Everything", "rating": "R", "shows": [{"t": 750, "f": ""}, {"t": 960, "f": ""}, {"t": 1170, "f": ""}]}]}, {"name": "Regal UA Farmingdale & IMAX", "city": "Farmingdale", "dist": "8.0 mi", "movies": [{"title": "Godzilla Minus Zero", "rating": "R", "shows": [{"t": 1050, "f": ""}, {"t": 1120, "f": ""}, {"t": 1150, "f": "Premium"}, {"t": 1240, "f": ""}, {"t": 1320, "f": ""}, {"t": 1350, "f": "Premium"}]}, {"title": "The Cat in the Hat", "rating": "PG", "shows": [{"t": 1090, "f": ""}, {"t": 1270, "f": ""}]}, {"title": "Ramayana", "rating": "PG-13", "shows": [{"t": 920, "f": ""}, {"t": 960, "f": ""}]}, {"title": "Clayface", "rating": "R", "shows": [{"t": 980, "f": ""}, {"t": 1160, "f": ""}, {"t": 1330, "f": ""}]}, {"title": "Wicker", "rating": "R", "shows": [{"t": 1110, "f": ""}]}, {"title": "Wildwood", "rating": "PG-13", "shows": [{"t": 1100, "f": ""}, {"t": 1300, "f": ""}]}, {"title": "Street Fighter", "rating": "PG-13", "shows": [{"t": 1340, "f": ""}]}, {"title": "The Only Living Pickpocket in New York", "rating": "R", "shows": [{"t": 1130, "f": ""}, {"t": 1310, "f": ""}]}, {"title": "You Can See Everything", "rating": "R", "shows": [{"t": 1080, "f": ""}, {"t": 1290, "f": ""}]}]}, {"name": "Showcase Cinema de lux Farmingdale", "city": "Farmingdale", "dist": "8.5 mi", "movies": [{"title": "The Mongoose", "rating": "R", "shows": [{"t": 765, "f": ""}]}, {"title": "Drummer Boy", "rating": "PG-13", "shows": [{"t": 755, "f": ""}, {"t": 785, "f": ""}, {"t": 940, "f": ""}, {"t": 970, "f": ""}, {"t": 1125, "f": ""}, {"t": 1155, "f": ""}, {"t": 1305, "f": ""}]}, {"title": "Godzilla Minus Zero", "rating": "R", "shows": [{"t": 800, "f": ""}, {"t": 970, "f": ""}, {"t": 1140, "f": ""}, {"t": 1310, "f": ""}]}, {"title": "Summer Holidays", "rating": "Not Rated", "shows": [{"t": 930, "f": ""}]}, {"title": "The Cat in the Hat", "rating": "PG", "shows": [{"t": 750, "f": "3D"}, {"t": 810, "f": ""}, {"t": 900, "f": ""}, {"t": 980, "f": ""}, {"t": 1090, "f": ""}, {"t": 1150, "f": ""}, {"t": 1280, "f": ""}, {"t": 1320, "f": ""}]}, {"title": "Wild Horse Nine", "rating": "R", "shows": [{"t": 790, "f": ""}, {"t": 965, "f": ""}, {"t": 1135, "f": ""}, {"t": 1305, "f": ""}]}, {"title": "Ramayana", "rating": "PG-13", "shows": [{"t": 680, "f": ""}, {"t": 720, "f": ""}, {"t": 905, "f": ""}, {"t": 975, "f": ""}, {"t": 1050, "f": "Premium"}, {"t": 1140, "f": ""}, {"t": 1155, "f": ""}, {"t": 1230, "f": ""}, {"t": 1290, "f": "Premium"}]}, {"title": "Clayface", "rating": "R", "shows": [{"t": 835, "f": ""}, {"t": 1000, "f": ""}, {"t": 1165, "f": ""}, {"t": 1330, "f": ""}]}, {"title": "Wicker", "rating": "R", "shows": [{"t": 1340, "f": ""}]}, {"title": "Wildwood", "rating": "PG-13", "shows": [{"t": 945, "f": ""}, {"t": 1275, "f": ""}]}, {"title": "Street Fighter", "rating": "PG-13", "shows": [{"t": 745, "f": ""}, {"t": 1120, "f": ""}, {"t": 1295, "f": ""}]}, {"title": "You Can See Everything", "rating": "R", "shows": [{"t": 680, "f": ""}, {"t": 900, "f": ""}, {"t": 1125, "f": ""}, {"t": 1350, "f": ""}]}, {"title": "Other Mommy", "rating": "R", "shows": [{"t": 795, "f": ""}, {"t": 1130, "f": ""}]}, {"title": "Verity", "rating": "R", "shows": [{"t": 1110, "f": ""}]}, {"title": "Resident Evil", "rating": "R", "shows": [{"t": 915, "f": ""}, {"t": 1285, "f": ""}]}]}, {"name": "Regal Deer Park", "city": "Deer Park", "dist": "9.4 mi", "movies": [{"title": "Rocky 50th Anniversary", "rating": "PG", "shows": [{"t": 965, "f": ""}, {"t": 1145, "f": ""}]}, {"title": "Godzilla Minus Zero", "rating": "R", "shows": [{"t": 980, "f": "Premium"}, {"t": 1120, "f": ""}, {"t": 1150, "f": "Premium"}, {"t": 1180, "f": "Premium"}, {"t": 1240, "f": ""}, {"t": 1320, "f": ""}, {"t": 1335, "f": ""}, {"t": 1350, "f": "Premium"}, {"t": 1365, "f": "Premium"}, {"t": 1380, "f": "Premium"}]}, {"title": "The Cat in the Hat", "rating": "PG", "shows": [{"t": 1070, "f": ""}, {"t": 1135, "f": ""}, {"t": 1310, "f": ""}]}, {"title": "Ramayana", "rating": "PG-13", "shows": [{"t": 870, "f": ""}]}, {"title": "Clayface", "rating": "R", "shows": [{"t": 1020, "f": ""}, {"t": 1130, "f": "Premium"}, {"t": 1190, "f": ""}, {"t": 1300, "f": "Premium"}]}, {"title": "Wicker", "rating": "R", "shows": [{"t": 990, "f": ""}, {"t": 1335, "f": ""}]}, {"title": "Wildwood", "rating": "PG-13", "shows": [{"t": 1100, "f": ""}, {"t": 1290, "f": ""}]}, {"title": "Street Fighter", "rating": "PG-13", "shows": [{"t": 1160, "f": ""}]}, {"title": "The Only Living Pickpocket in New York", "rating": "R", "shows": [{"t": 1340, "f": ""}]}, {"title": "You Can See Everything", "rating": "R", "shows": [{"t": 1110, "f": "Premium"}, {"t": 1330, "f": ""}]}, {"title": "Other Mommy", "rating": "R", "shows": [{"t": 1360, "f": ""}]}, {"title": "Thief", "rating": "R", "shows": [{"t": 1010, "f": ""}, {"t": 1185, "f": ""}, {"t": 1370, "f": ""}]}]}, {"name": "Bellmore Movies & The Showplace", "city": "Bellmore", "dist": "10.1 mi", "movies": [{"title": "Drummer Boy", "rating": "PG-13", "shows": [{"t": 840, "f": ""}]}]}, {"name": "Bellmore Playhouse", "city": "Bellmore", "dist": "10.1 mi", "movies": [{"title": "Disco", "rating": "Not Rated", "shows": [{"t": 1245, "f": ""}]}, {"title": "Godzilla Minus Zero", "rating": "R", "shows": [{"t": 975, "f": ""}, {"t": 1130, "f": ""}, {"t": 1275, "f": ""}]}, {"title": "The Cat in the Hat", "rating": "PG", "shows": [{"t": 1020, "f": ""}, {"t": 1145, "f": ""}, {"t": 1275, "f": ""}]}, {"title": "Wild Horse Nine", "rating": "R", "shows": [{"t": 1115, "f": ""}, {"t": 1275, "f": ""}]}, {"title": "Ramayana", "rating": "PG-13", "shows": [{"t": 975, "f": ""}, {"t": 1215, "f": ""}]}, {"title": "Clayface", "rating": "R", "shows": [{"t": 1020, "f": ""}, {"t": 1145, "f": ""}, {"t": 1275, "f": ""}]}, {"title": "Wicker", "rating": "R", "shows": [{"t": 1165, "f": ""}]}, {"title": "Wildwood", "rating": "PG-13", "shows": [{"t": 1015, "f": ""}]}, {"title": "The Only Living Pickpocket in New York", "rating": "R", "shows": [{"t": 1035, "f": ""}, {"t": 1155, "f": ""}, {"t": 1275, "f": ""}]}]}, {"name": "AMC Levittown 10", "city": "Levittown", "dist": "10.7 mi", "movies": [{"title": "Rocky 50th Anniversary", "rating": "PG", "shows": [{"t": 810, "f": ""}, {"t": 960, "f": ""}]}, {"title": "Drummer Boy", "rating": "PG-13", "shows": [{"t": 750, "f": ""}, {"t": 975, "f": ""}, {"t": 1140, "f": ""}, {"t": 1380, "f": ""}]}, {"title": "Godzilla Minus Zero", "rating": "R", "shows": [{"t": 660, "f": ""}, {"t": 765, "f": ""}, {"t": 960, "f": ""}, {"t": 1095, "f": ""}, {"t": 1155, "f": ""}, {"t": 1200, "f": ""}, {"t": 1290, "f": ""}, {"t": 1365, "f": ""}, {"t": 1395, "f": ""}]}, {"title": "JIMMY", "rating": "PG-13", "shows": [{"t": 855, "f": ""}]}, {"title": "The Cat in the Hat", "rating": "PG", "shows": [{"t": 660, "f": "3D"}, {"t": 765, "f": ""}, {"t": 810, "f": ""}, {"t": 825, "f": ""}, {"t": 930, "f": ""}, {"t": 1350, "f": ""}, {"t": 1365, "f": ""}]}, {"title": "Wild Horse Nine", "rating": "R", "shows": [{"t": 675, "f": ""}, {"t": 885, "f": ""}, {"t": 1215, "f": ""}, {"t": 1365, "f": ""}]}, {"title": "Ramayana", "rating": "PG-13", "shows": [{"t": 1305, "f": ""}]}, {"title": "Clayface", "rating": "R", "shows": [{"t": 720, "f": ""}, {"t": 840, "f": ""}, {"t": 1065, "f": ""}, {"t": 1230, "f": ""}, {"t": 1335, "f": ""}, {"t": 1395, "f": ""}]}, {"title": "Wildwood", "rating": "PG-13", "shows": [{"t": 735, "f": ""}, {"t": 1005, "f": ""}, {"t": 1155, "f": ""}, {"t": 1350, "f": ""}]}, {"title": "Street Fighter", "rating": "PG-13", "shows": [{"t": 1035, "f": ""}, {"t": 1185, "f": ""}]}, {"title": "You Can See Everything", "rating": "R", "shows": [{"t": 735, "f": ""}, {"t": 915, "f": ""}, {"t": 1110, "f": ""}, {"t": 1335, "f": ""}]}]}, {"name": "AMC Huntington Square 12", "city": "Huntington", "dist": "14.4 mi", "movies": [{"title": "Drummer Boy", "rating": "PG-13", "shows": [{"t": 600, "f": ""}, {"t": 780, "f": ""}, {"t": 960, "f": ""}, {"t": 1155, "f": ""}]}, {"title": "Godzilla Minus Zero", "rating": "R", "shows": [{"t": 720, "f": "Premium"}, {"t": 840, "f": ""}, {"t": 915, "f": "Premium"}, {"t": 975, "f": ""}, {"t": 1035, "f": ""}, {"t": 1140, "f": "Premium"}, {"t": 1335, "f": "Premium"}]}, {"title": "JIMMY", "rating": "PG-13", "shows": [{"t": 720, "f": ""}, {"t": 900, "f": ""}]}, {"title": "The Cat in the Hat", "rating": "PG", "shows": [{"t": 645, "f": "Premium"}, {"t": 670, "f": ""}, {"t": 720, "f": "3D"}, {"t": 810, "f": "Premium"}, {"t": 900, "f": ""}, {"t": 975, "f": "Premium"}, {"t": 1110, "f": "Premium"}, {"t": 1290, "f": "Premium"}]}, {"title": "Wild Horse Nine", "rating": "R", "shows": [{"t": 660, "f": ""}, {"t": 840, "f": ""}, {"t": 1020, "f": ""}, {"t": 1200, "f": ""}, {"t": 1305, "f": ""}]}, {"title": "Ramayana", "rating": "PG-13", "shows": [{"t": 645, "f": "3D"}, {"t": 735, "f": ""}, {"t": 900, "f": ""}, {"t": 1200, "f": ""}]}, {"title": "Paging Hezbollah", "rating": "PG-13", "shows": [{"t": 630, "f": ""}]}, {"title": "Clayface", "rating": "R", "shows": [{"t": 705, "f": ""}, {"t": 870, "f": ""}, {"t": 1035, "f": ""}, {"t": 1080, "f": ""}, {"t": 1350, "f": ""}]}, {"title": "Wicker", "rating": "R", "shows": [{"t": 1170, "f": ""}, {"t": 1230, "f": ""}, {"t": 1350, "f": ""}]}, {"title": "Wildwood", "rating": "PG-13", "shows": [{"t": 660, "f": ""}, {"t": 780, "f": ""}, {"t": 900, "f": ""}, {"t": 1170, "f": ""}, {"t": 1350, "f": ""}]}, {"title": "Street Fighter", "rating": "PG-13", "shows": [{"t": 1070, "f": ""}]}, {"title": "You Can See Everything", "rating": "R", "shows": [{"t": 720, "f": ""}, {"t": 945, "f": ""}, {"t": 1080, "f": ""}, {"t": 1260, "f": ""}]}, {"title": "Other Mommy", "rating": "R", "shows": [{"t": 1200, "f": ""}, {"t": 1335, "f": ""}]}, {"title": "Verity", "rating": "R", "shows": [{"t": 1350, "f": ""}]}]}]},
   news: {
     asOf: "7–8 nov",
     items: [
@@ -500,9 +539,35 @@ function localStore(){
   };
 }
 
+
+/* ===== Cartelera ===== */
+let thSel = 0;
+const POSTER = ["linear-gradient(160deg,#F2C9BC,#D8917E)","linear-gradient(160deg,#CDE9E0,#7FB8A6)","linear-gradient(160deg,#F1E1C9,#CDA878)","linear-gradient(160deg,#E2DDF2,#A69BD0)","linear-gradient(160deg,#D3E8F2,#86B7CF)"];
+const hueOf = t => [...t].reduce((a,c)=>a+c.charCodeAt(0),0) % POSTER.length;
+const fmtMin = m => { const h=Math.floor(m/60), mm=m%60; return `${h%12||12}:${pad(mm)} ${h>=12?"PM":"AM"}`; };
+function renderMovies(){
+  const c = feed.movies || SNAPSHOT.movies; if(!c) return;
+  $("#mvdate").textContent = c.asOf + " · Fandango";
+  if (thSel >= c.theaters.length) thSel = 0;
+  $("#thtabs").innerHTML = c.theaters.map((t,i)=>`<button class="th-tab ${i===thSel?"on":""}" data-i="${i}"><b>${esc(t.name)}</b><small>${esc(t.city)} · ${esc(t.dist)}</small></button>`).join("");
+  const now = new Date(), nowMin = now.getHours()*60 + now.getMinutes();
+  const isToday = ymd(now) === (c.date || "2026-11-08");
+  const only = $("#onlyNext").checked && isToday;
+  const t = c.theaters[thSel];
+  const items = t.movies.map(m => ({...m, shows: only ? m.shows.filter(s=>s.t>nowMin) : m.shows}))
+    .filter(m => m.shows.length);
+  $("#movies").innerHTML = items.length ? items.map(m => `
+    <div class="mv"><div class="poster" style="background:${POSTER[hueOf(m.title)]}">${esc(m.title.replace(/^The /,"")[0])}</div>
+      <div style="min-width:0"><div class="mv-t">${esc(m.title)}</div><span class="rate">${esc(m.rating)}</span>
+      <div class="times">${m.shows.map(s=>`<span class="tm ${s.f==="Premium"?"pf":s.f==="3D"?"d3":""} ${isToday&&s.t<=nowMin?"past":""}">${fmtMin(s.t)}</span>`).join("")}</div></div></div>`).join("")
+    : `<div class="empty" style="grid-column:1/-1">No quedan funciones hoy en este cine 🍿</div>`;
+}
+$("#thtabs").onclick = e => { const b=e.target.closest(".th-tab"); if(!b) return; thSel=+b.dataset.i; renderMovies(); };
+$("#onlyNext").onchange = renderMovies;
+setInterval(renderMovies, 60000);
 /* ===== Render inicial ===== */
-function renderFeed(){ renderHeader(); renderWeather(); renderStocks(); renderNews();
-  $("#foot").textContent = "Tiempo: pronóstico local · Bolsa y noticias: AP y otras fuentes enlazadas · Los datos se actualizan cuando Claude los renueva."; }
+function renderFeed(){ renderHeader(); renderWeather(); renderStocks(); renderNews(); renderMovies();
+  $("#foot").textContent = "Tiempo: pronóstico local · Bolsa y noticias: AP y otras fuentes enlazadas · Cartelera: Fandango · Los datos se actualizan cuando Claude los renueva."; }
 renderFeed(); renderCal(); renderAgenda();
 setInterval(renderHeader, 60000);
 
